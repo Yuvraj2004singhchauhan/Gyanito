@@ -40,27 +40,30 @@ const Login = () => {
   const onSubmit = async (userObject: unknown) => {
     try {
       const result = await doLogin(userObject);
-      console.log("Result ", result);
 
-      if (result.data.message) {
-        localStorage.setItem("role", result.data.role);
-        localStorage.setItem("token", result.data.token);
-        setMessage(result.data.message);
-        if(result.data.role == "admin"){
-            navigate("/admindashboard");
-        }
+      localStorage.setItem("role", result.data.role);
+      localStorage.setItem("token", result.data.token);
+      setMessage(result.data.message);
 
-        // ✅ Navigate to User Dashboard
-        else{
-
-            navigate("/dashboard");
-        }
+      if (result.data.role === "admin") {
+        navigate("/admindashboard");
       } else {
-        setMessage(result.data.message);
+        navigate("/dashboard");
       }
-    } catch (err) {
+    } catch (err: unknown) {
+      // Wrong credentials now come back as HTTP 401, so axios throws here
+      // instead of resolving — pull the real message off the error response.
       console.log("Login failed", err);
-      setMessage("Login failed. Please try again.");
+      if (typeof err === "object" && err !== null && "response" in err) {
+        const errorResponse = err as {
+          response?: { data?: { message?: string } };
+        };
+        setMessage(
+          errorResponse.response?.data?.message || "Login failed. Please try again."
+        );
+      } else {
+        setMessage("Login failed. Please try again.");
+      }
     }
   };
 

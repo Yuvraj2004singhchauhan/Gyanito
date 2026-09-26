@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
+import { createQuiz } from "../api/quiz-api"; // adjust this path if quiz-api.tsx lives elsewhere in your src tree
 
 // Types
 interface Question {
@@ -57,7 +57,7 @@ const CreateQuiz = () => {
 
   const onSubmit = async (data: QuizFormData) => {
     try {
-      await axios.post(`${import.meta.env.VITE_QUIZ_API}create`, data);
+      await createQuiz(data);
       setMessage("✅ Quiz created successfully!");
       navigate("/admindashboard");
     } catch (err) {

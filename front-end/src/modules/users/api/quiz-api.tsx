@@ -6,6 +6,17 @@ const quizApi = axios.create({
   baseURL: import.meta.env.VITE_QUIZ_API,
 });
 
+// Attach the saved JWT (if any) to every outgoing request.
+// Needed because /create, /update/:id and /delete/:id are protected by
+// the backend's `auth` middleware, which expects "Authorization: Bearer <token>".
+quizApi.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // GET all quizzes
 export const getAllQuizzes = () => quizApi.get("");
 

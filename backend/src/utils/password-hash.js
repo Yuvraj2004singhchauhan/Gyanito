@@ -1,8 +1,9 @@
-import bcrypt from 'bcrypt';    
+import bcrypt from 'bcrypt';
 
-export const encryptPassword = (plainPassword)=>{
-    console.log(process.env.SALT, 'Type of ', typeof process.env.SALT);
-    return bcrypt.hashSync(plainPassword, parseInt(process.env.SALT));
+const SALT_ROUNDS = parseInt(process.env.SALT) || 10;
+
+export const encryptPassword = (plainPassword) => {
+  return bcrypt.hashSync(plainPassword, SALT_ROUNDS);
 }
 export const compareHash = (plainPassword, dbPassword)=>{
     return bcrypt.compareSync(plainPassword, dbPassword);

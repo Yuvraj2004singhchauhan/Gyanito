@@ -8,7 +8,8 @@ import Dashboard from "@/modules/users/pages/Dashboard.tsx";
 import AdminDashboard from "@/modules/users/pages/adminDashboard.tsx";
 import CreateQuiz from "@/modules/users/pages/CretaeQuiz.tsx";
 import EditQuiz from "@/modules/users/pages/EditQuiz.tsx";
-import QuizPage from "@/modules/users/pages/Quizpage.tsx";
+import QuizPage from "@/modules/users/pages/QuizPage.tsx";
+import PrivateRoute from "./PrivateRoute.tsx"; // adjust path to wherever you place PrivateRoute.tsx
 
 
 
@@ -21,10 +22,10 @@ const AppRoutes = ()=>{
              <Route path="/leaderboard" element={<Leaderboard/>}/>
              <Route path="/signup" element={<Signup/>}/>
             <Route path="/login" element={<Login/>}/>
-            <Route path="/dashboard"element={<Dashboard/>}></Route>
-            <Route path="/admindashboard"element={<AdminDashboard/>}></Route>
-            <Route path="/admin/create-quiz" element={<CreateQuiz />} />
-            <Route path="/admin/edit-quiz/:id" element={<EditQuiz />} />
+            <Route path="/dashboard" element={<PrivateRoute><Dashboard/></PrivateRoute>}></Route>
+            <Route path="/admindashboard" element={<PrivateRoute requiredRole="admin"><AdminDashboard/></PrivateRoute>}></Route>
+            <Route path="/admin/create-quiz" element={<PrivateRoute requiredRole="admin"><CreateQuiz /></PrivateRoute>} />
+            <Route path="/admin/edit-quiz/:id" element={<PrivateRoute requiredRole="admin"><EditQuiz /></PrivateRoute>} />
             <Route path="/quiz/:id" element={<QuizPage />} />
 
         </Routes>
